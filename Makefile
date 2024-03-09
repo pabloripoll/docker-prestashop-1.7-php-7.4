@@ -16,8 +16,6 @@ CURRENT_DIR=$(patsubst %/,%,$(dir $(realpath $(firstword $(MAKEFILE_LIST)))))
 DIR_BASENAME=$(shell basename $(CURRENT_DIR))
 ROOT_DIR=$(CURRENT_DIR)
 
-DOCKER_USER=sudo
-
 help: ## shows this Makefile help message
 	echo 'usage: make [target]'
 	echo
