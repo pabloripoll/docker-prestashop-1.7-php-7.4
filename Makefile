@@ -66,7 +66,7 @@ prestashop-destroy: ## stops and removes the Prestashop PHP container from Docke
 # -------------------------------------------------------------------------------------------------
 #  Prestashop - MariaDB Database
 # -------------------------------------------------------------------------------------------------
-.PHONY: database-set database-build database-start database-stop database-destroy database-replace database-backup
+.PHONY: database-ssh database-set database-build database-start database-stop database-destroy database-replace database-backup
 
 database-ssh: ## enters the database container shell
 	cd docker/mariadb && $(MAKE) ssh
