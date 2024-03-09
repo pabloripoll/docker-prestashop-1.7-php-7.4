@@ -38,9 +38,12 @@ ports-check: ## shows this project ports availability on local machine
 	cd docker/mariadb && $(MAKE) port-check
 
 # -------------------------------------------------------------------------------------------------
-#  Prestasop https://github.com/PrestaShop/PrestaShop/releases/download/1.7.8.11/prestashop_1.7.8.11.zip
+#  Prestashop
 # -------------------------------------------------------------------------------------------------
-.PHONY: prestashop-set prestashop-build prestashop-start prestashop-stop prestashop-destroy
+.PHONY: prestashop-download prestashop-ssh prestashop-set prestashop-build prestashop-start prestashop-stop prestashop-destroy
+
+prestashop-download: ## dowloads the Prestashop zip source into project root
+	curl https://github.com/PrestaShop/PrestaShop/releases/download/1.7.8.11/prestashop_1.7.8.11.zip -O -J -L
 
 prestashop-ssh: ## enters the Prestashop container shell
 	cd docker/nginx-php && $(MAKE) ssh
