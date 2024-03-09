@@ -2,7 +2,7 @@
 
 Docker container image for Prestashop development
 
-- [Prestashop 1.7:latest](https://build.prestashop-project.org/tag/1.7/)
+- [Prestashop 1.7](https://build.prestashop-project.org/tag/1.7/) - *(latest)*
 
 - [PHP-FPM 7.4](https://www.php.net/releases/7_4_0.php)
 
@@ -16,7 +16,7 @@ Repository: https://github.com/pabloripoll/docker-prestashop-1.7-php-7.4
 * Built on the lightweight and secure Alpine Linux distribution
 * Multi-platform, supporting AMD4, ARMv6, ARMv7, ARM64
 * Very small Docker image size (+/-40MB)
-* Uses PHP 8.3 for the best performance, low CPU usage & memory footprint
+* Uses PHP 7.4 for the best performance, low CPU usage & memory footprint
 * Optimized for 100 concurrent users
 * Optimized to only use resources when there's traffic (by using PHP-FPM's `on-demand` process manager)
 * The services Nginx, PHP-FPM and supervisord run under a non-privileged user (nobody) to make it more secure
