@@ -1,6 +1,22 @@
+<div style="width:100%;float:left;clear:both;margin-bottom:50px;">
+    <a href="https://github.com/pabloripoll?tab=repositories">
+        <img
+            style="width:150px;float:left;"
+            src="https://pabloripoll.com/files/logo-light-100x300.png"/>
+    </a>
+</div>
+
 # Prestashop 1.7 with PHP FPM 7.4
 
-Docker container image for Prestashop development
+Docker container image for Wordpress development
+
+The objective of this repository is having a CaaS [Containers as a Service](https://www.ibm.com/topics/containers-as-a-service) to provide a start up application with the basic enviroment features to deploy a php service running with Nginx and PHP-FPM in a container for [WordPress](https://wordpress.org) and another container with a MySQL database to follow the best practices on an easy scenario to understand and modify on development requirements.
+
+The connection between container is as [Host Network](https://docs.docker.com/network/drivers/host/) on `eth0`, thus both containers do not share networking or bridge configuration.
+
+As client end user both services can be accessed through `localhost:${PORT}` but the connection between containers is through the `${HOSTNAME}:${PORT}`.
+
+### Laravel Docker Container Service
 
 - [Prestashop 1.7](https://build.prestashop-project.org/tag/1.7/) - *(latest)*
 
@@ -10,30 +26,24 @@ Docker container image for Prestashop development
 
 - [Alpine Linux 3.19](https://www.alpinelinux.org/)
 
+### MariaDB Docker Container Service
 
-Repository: https://github.com/pabloripoll/docker-prestashop-1.7-php-7.4
+- [MariaDB 10.11](https://mariadb.com/kb/en/changes-improvements-in-mariadb-1011/)
 
-* Built on the lightweight and secure Alpine Linux distribution
+- [Alpine Linux 3.19](https://www.alpinelinux.org/)
+
+### Project objetives with Docker
+
+* Built on the lightweight and secure Alpine 3.19 [2024 release](https://www.alpinelinux.org/posts/Alpine-3.19.1-released.html) Linux distribution
 * Multi-platform, supporting AMD4, ARMv6, ARMv7, ARM64
 * Very small Docker image size (+/-40MB)
-* Uses PHP 7.4 for the best performance, low CPU usage & memory footprint
+* Uses PHP 8.3 as default for the best performance, low CPU usage & memory footprint, but also can be downgraded till PHP 8.0
 * Optimized for 100 concurrent users
 * Optimized to only use resources when there's traffic (by using PHP-FPM's `on-demand` process manager)
-* The services Nginx, PHP-FPM and supervisord run under a non-privileged user (nobody) to make it more secure
+* The services Nginx, PHP-FPM and supervisord run under a project-privileged user to make it more secure
 * The logs of all the services are redirected to the output of the Docker container (visible with `docker logs -f <container name>`)
 * Follows the KISS principle (Keep It Simple, Stupid) to make it easy to understand and adjust the image to your needs
-
-*At the moment, this repository does not include other services like message broker or mailing, etc.*
-
-## [![Personal Page](https://pabloripoll.com/files/logo-light-100x300.png)](https://github.com/pabloripoll?tab=repositories)
-
-## About
-
-The objective of this repository is having a CaaS [Containers as a Service](https://www.ibm.com/topics/containers-as-a-service) to provide a start up application with the basic enviroment features to deploy a php service running with Nginx and PHP-FPM in a container for Prestashop and another container with a MySQL database to follow the best practices on an easy scenario to understand and modify at development requirements.
-
-The configuration for the connection between container is as [Host Network](https://docs.docker.com/network/drivers/host/) on `eth0`, thus both containers do not share networking or bridge.
-
-To access the containers as client it can be done through `localhost:${PORT}` but the connection between containers is through the `${HOSTNAME}:${PORT}`.
+* Services independence to connect WordPress to other database allocation
 
 #### Containers on Windows systems
 
@@ -87,10 +97,10 @@ Directories and main files on a tree architecture description
 │   │   ├── prestashop-init.sql
 │   │   └── prestashop-backup.sql
 │   │
-│   ├── plugin
+│   ├── module
 │   │   ├── dev
-│   │   ├── (plugin-version)
-│   │   └── (plugin-version).zip
+│   │   ├── (module-version)
+│   │   └── (module-version).zip
 │   │
 │   ├── theme
 │   │   ├── dev
@@ -109,6 +119,8 @@ Directories and main files on a tree architecture description
 ```
 
 ## Automation with Makefile
+
+Makefiles are often used to automate the process of building and compiling software on Unix-based systems as Linux and macOS.
 
 *On Windows - I recommend to use Makefile: \
 https://stackoverflow.com/questions/2532234/how-to-run-a-makefile-in-windows*
@@ -145,6 +157,30 @@ Makefile  project-destroy          stops and removes both Prestashop and databas
 Makefile  repo-flush               clears local git repository cache specially to update .gitignore
 ```
 
+Checkout local machine ports availability
+```bash
+$ make ports-check
+
+Checking configuration for WORDPRESS container:
+WORDPRESS > port:8888 is free to use.
+Checking configuration for WORDPRESS DB container:
+WORDPRESS DB > port:8889 is free to use.
+```
+
+Checkout local machine IP to set connection between containers using the following makefile recipe
+```bash
+$ make hostname
+
+192.168.1.41
+```
+
+**Before running the project** checkout database connection health using a database mysql client.
+
+- [MySQL Workbench](https://www.mysql.com/products/workbench/)
+- [DBeaver](https://dbeaver.io/)
+- [HeidiSQL](https://www.heidisql.com/)
+- Or whatever you like. This Docker project doesn't come with [PhpMyAdmin](https://www.phpmyadmin.net/) to make it lighter.
+
 ## Build the project
 ```bash
 $ make project-build
@@ -178,13 +214,6 @@ $ make hostname
 192.168.1.41
 ```
 
-**Before running the project** checkout database connection health using a database mysql client.
-
-- [MySQL Workbench](https://www.mysql.com/products/workbench/)
-- [DBeaver](https://dbeaver.io/)
-- [HeidiSQL](https://www.heidisql.com/)
-- Or whatever you like. This Docker project doesn't come with [PhpMyAdmin](https://www.phpmyadmin.net/) to make it lighter.
-
 ## Running the project
 
 ```bash
@@ -198,15 +227,15 @@ $ make project-start
 
 Now, Prestashop should be available on local machine by visiting [http://localhost:8888/index.php](http://localhost:8888/index.php)
 
+- To make this happends rename the directory **install_x** to just **install**
+
 ## Database
 
-Every time the containers are built or up and running it will be like start from a fresh installation, displaying Prestashop wizard on screen.
-
-- To make this happends rename the directory **install_x** to just **install**
+Every time the containers are built or up and running it will be like start from a fresh installation, displaying Prestashop Wizard on screen.
 
 So, you can follow the Prestashop Wizard steps to configure the project at requirements *(language, ip and port, etc)* with fresh database tables.
 
-On he other hand, you can continue using this repository with the pre-set database executing the command `$ make database-install`
+On the other hand, you can continue using this repository with the pre-set database executing the command `$ make database-install`
 
 Follow the next recommendations to keep development stages clear and safe.
 
@@ -245,7 +274,7 @@ $ make database-replace
 PRESTASHOP database has been replaced.
 ```
 
-## Notes
+#### Notes
 
 - Notice that both files in [resources/database/](resources/database/) have the database name that has been set on the main `.env` file to automate processes.
 
@@ -256,3 +285,110 @@ $ make project-set
 PRESTASHOP docker-compose.yml .env file has been set.
 PRESTASHOP DB docker-compose.yml .env file has been set.
 ```
+
+## Docker Info
+
+Docker container
+```bash
+$ sudo docker ps -a
+CONTAINER ID   IMAGE      COMMAND    CREATED      STATUS      PORTS                                             NAMES
+ecd27aeae010   pres...   "docker-php-entrypoi…"   3 mins...   9000/tcp, 0.0.0.0:8888->80/tcp, :::8888->80/tcp   prestashop-app
+52a9994c31b0   pres...   "/init"                  4 mins...   0.0.0.0:8889->3306/tcp, :::8889->3306/tcp         prestashop-db
+
+```
+
+Docker image
+```bash
+$ sudo docker images
+REPOSITORY   TAG           IMAGE ID       CREATED         SIZE
+pres...-app  pres...       373f6967199b   5 minutes ago   200MB
+pres...-db   pres...       1f1775f7e1db   6 minutes ago   333MB
+```
+
+Docker stats
+```bash
+$ sudo docker system df
+TYPE            TOTAL     ACTIVE    SIZE      RECLAIMABLE
+Images          1         1         532.2MB   0B (0%)
+Containers      1         1         25.03kB   0B (0%)
+Local Volumes   1         0         117.9MB   117.9MB (100%)
+Build Cache     39        0         10.21kB   10.21kB
+```
+
+## Reset configurations on the run
+In [docker/config/](docker/config/) you'll find the default configuration files for Nginx, PHP and PHP-FPM.
+
+If you want to extend or customize that you can do so by mounting a configuration file in the correct folder;
+
+Nginx configuration:
+```
+$ sudo docker run -v "`pwd`/nginx-server.conf:/etc/nginx/conf.d/server.conf" ${COMPOSE_PROJECT_NAME}
+```
+
+PHP configuration:
+```
+$ sudo docker run -v "`pwd`/php-setting.ini:/etc/php83/conf.d/settings.ini" ${COMPOSE_PROJECT_NAME}
+```
+
+PHP-FPM configuration:
+```
+$ sudo docker run -v "`pwd`/php-fpm-settings.conf:/etc/php83/php-fpm.d/server.conf" ${COMPOSE_PROJECT_NAME}
+```
+
+_Note; Because `-v` requires an absolute path I've added `pwd` in the example to return the absolute path to the current directory_
+
+## Stop Containers
+
+Using the following Makefile recipe stops application and database containers, keeping database persistance and application files binded without any loss
+```bash
+$ make project-stop
+
+[+] Killing 1/1
+ ✔ Container prestashop-db  Killed               0.5s
+Going to remove prestashop-db
+[+] Removing 1/0
+ ✔ Container prestashop-db  Removed              0.0s
+[+] Killing 1/1
+ ✔ Container prestashop-app  Killed              0.5s
+Going to remove prestashop-app
+[+] Removing 1/0
+ ✔ Container prestashop-app  Removed             0.0s
+```
+
+## Remove Containers
+
+To stop and remove both application and database containers from docker network use the following Makefile recipe
+```bash
+$ make project-destroy
+
+[+] Killing 1/1
+ ✔ Container prestashop-db  Killed                    0.4s
+Going to remove prestashop-db
+[+] Removing 1/0
+ ✔ Container prestashop-db  Removed                   0.0s
+[+] Running 1/1
+ ✔ Network prestashop-db_default  Removed             0.3s
+
+[+] Killing 1/1
+ ✔ Container prestashop-app  Killed                   0.4s
+Going to remove prestashop-app
+[+] Removing 1/0
+ ✔ Container prestashop-app  Removed                  0.0s
+[+] Running 1/1
+ ✔ Network prestashop-app_default  Removed
+```
+
+The, remove the Docker images created for containers by its tag name reference
+```bash
+$ docker rmi $(docker images --filter=reference="*:prestashop-*" -q)
+```
+
+Prune Docker system cache
+```bash
+$ sudo docker system prune
+
+...
+Total reclaimed space: 423.4MB
+```
+
+*(no need for pruning volume)*
