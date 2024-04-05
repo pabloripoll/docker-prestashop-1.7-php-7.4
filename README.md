@@ -233,14 +233,14 @@ Running container on Docker
 ```bash
 $ sudo docker ps -a
 CONTAINER ID   IMAGE      COMMAND    CREATED      STATUS      PORTS                                             NAMES
-ecd27aeae010   word...    "docker-php-entrypoi…"  1 min...    9000/tcp, 0.0.0.0:8888->80/tcp, :::8888->80/tcp   ps-app
+ecd27aeae010   pres...    "docker-php-entrypoi…"  1 min...    9000/tcp, 0.0.0.0:8888->80/tcp, :::8888->80/tcp   ps-app
 ```
 
 Docker image size
 ```bash
 $ sudo docker images
 REPOSITORY   TAG           IMAGE ID       CREATED         SIZE
-ps-app       word...       373f6967199b   5 minutes ago   251MB
+ps-app       pres...       373f6967199b   5 minutes ago   251MB
 ```
 
 Stats regarding the amount of disk space used by the container
