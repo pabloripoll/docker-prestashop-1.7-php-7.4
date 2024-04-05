@@ -202,7 +202,7 @@ PRESTASHOP docker-compose.yml .env file has been set.
 => [nginx-php internal] load build definition from Dockerfile                       0.0s
  => => transferring dockerfile: 2.78kB                                              0.0s
  => [nginx-php internal] load metadata for docker.io/library/composer:latest        1.5s
- => [nginx-php internal] load metadata for docker.io/library/php:8.3-fpm-alpine     1.5s
+ => [nginx-php internal] load metadata for docker.io/library/php:7.4-fpm-alpine     1.5s
  => [nginx-php internal] load .dockerignore                                         0.0s
  => => transferring context: 108B                                                   0.0s
  => [nginx-php internal] load build context                                         0.0s
