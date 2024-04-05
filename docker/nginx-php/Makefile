@@ -122,7 +122,7 @@ nginx-conf: ## updates any configuration NGINX changes while container is runnin
 	$(DOCKER_USER) docker run -v "`pwd`/nginx-server.conf:/etc/nginx/conf.d/server.conf" $(DOCKER_CAAS):$(DOCKER_ABBR)-nginx-php
 
 php-conf: ## updates any configuration PHP changes while container is running
-	$(DOCKER_USER) docker run -v "`pwd`/php-setting.ini:/etc/php83/conf.d/settings.ini" $(DOCKER_CAAS)
+	$(DOCKER_USER) docker run -v "`pwd`/php-setting.ini:/etc/php74/conf.d/settings.ini" $(DOCKER_CAAS)
 
 php-fpm-conf: ## updates any configuration PHP-FPM changes while container is running
-	$(DOCKER_USER) docker run -v "`pwd`/php-fpm-settings.conf:/etc/php83/php-fpm.d/server.conf" $(DOCKER_CAAS)
+	$(DOCKER_USER) docker run -v "`pwd`/php-fpm-settings.conf:/etc/php74/php-fpm.d/server.conf" $(DOCKER_CAAS)
